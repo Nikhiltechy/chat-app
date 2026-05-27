@@ -15,6 +15,8 @@ import authRoutes from "./routes/auth.routes.js";
 
 import passport from "./auth/google.strategy.js";
 
+import chatRoutes from "./routes/chat.routes.js";
+
 const app = express();
 
 app.use(helmet());
@@ -53,8 +55,17 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth",authRoutes);
+
+app.use(
+  "/api/chat",
+  chatRoutes
+);
+
 app.use(notFound);
 
+
 app.use(errorMiddleware);
+
+
 
 export default app;
