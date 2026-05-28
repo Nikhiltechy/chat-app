@@ -12,7 +12,7 @@ import {
  getReceiverSocketId
 }
 from
-"../sockets/socket.js";
+"../socket/socket.js";
 
 const startConversation =
 async (
@@ -99,6 +99,9 @@ async (
   // update last message
   conversation.lastMessage =
     message._id;
+
+    conversation.updatedAt =
+  new Date();
 
   await conversation.save({
     validateBeforeSave:

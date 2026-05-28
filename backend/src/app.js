@@ -17,6 +17,9 @@ import passport from "./auth/google.strategy.js";
 
 import chatRoutes from "./routes/chat.routes.js";
 
+import userRoutes
+from "./routes/user.routes.js";
+
 const app = express();
 
 app.use(helmet());
@@ -34,13 +37,27 @@ app.use(
   })
 );
 
-app.use(
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-  })
-);
+const authLimiter =
+rateLimit({
+  windowMs:
+    15 * 60 * 1000,
 
+  max: 100,
+
+  standardHeaders:
+    true,
+
+  legacyHeaders:
+    false,
+});
+
+const apiLimiter =
+rateLimit({
+  windowMs:
+    15 * 60 * 1000,
+
+  max: 1000,
+});
 app.use(express.json());
 
 app.use(cookieParser());
@@ -54,11 +71,23 @@ app.get("/", (req, res) => {
   res.send("API Running...");
 });
 
-app.use("/api/auth",authRoutes);
+app.use(
+  apiLimiter
+);
+app.use(
+  "/api/auth",
+  authLimiter,
+  authRoutes
+);
 
 app.use(
   "/api/chat",
   chatRoutes
+);
+
+app.use(
+ "/api/users",
+ userRoutes
 );
 
 app.use(notFound);
