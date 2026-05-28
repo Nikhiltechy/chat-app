@@ -51,11 +51,13 @@ function SignupPage() {
       res.success
     ) {
 
-      navigate(
-        "/chat"
-      );
-
-    } else {
+  navigate(
+    "/chat",
+    {
+      replace: true
+    }
+  );
+} else {
 
       alert(
         res.message

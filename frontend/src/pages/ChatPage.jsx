@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { LogOut } from "lucide-react";
 
 import  useAuthStore  from "../store/authStore";
@@ -7,10 +7,20 @@ import  useChatStore  from "../store/chatStore";
 import MessageInput from "../components/MessageInput";
 import useSocketStore from "../store/socketStore";
 function ChatPage() {
+const messagesEndRef =
+useRef(null);
+
 const socket =
 useSocketStore(
   (state) =>
   state.socket
+);
+
+const [
+  showUsers,
+  setShowUsers
+] = useState(
+  false
 );
 
   const { user, logout } =
@@ -39,6 +49,17 @@ const {
   }
 
 }, [socket]);
+
+useEffect(() => {
+
+  messagesEndRef
+  .current
+  ?.scrollIntoView({
+    behavior:
+      "smooth",
+  });
+
+}, [messages]);
 
   return (
     <div className="h-screen bg-gray-100 p-4">
@@ -145,72 +166,189 @@ const {
             />
           </div>
 
-          <h2
+          <div className="px-4 pb-4">
+
+  <button
+    onClick={() =>
+      setShowUsers(
+        !showUsers
+      )
+    }
+
+    className="
+    w-full
+    bg-black
+    text-white
+    rounded-2xl
+    py-3
+    font-medium
+    hover:opacity-90
+    transition
+  "
+  >
+    + New Chat
+  </button>
+
+</div>
+
+{
+ showUsers && (
+
+  <div
+   className="
+   px-3
+   mb-4
+   max-h-60
+   overflow-y-auto
+  "
+  >
+
+   {users
+
+   .filter(
+    (
+      user
+    ) =>
+
+    !chats.some(
+      (
+        chat
+      ) =>
+
+      chat.user
+      ._id
+      ===
+      user._id
+    )
+   )
+
+   .map(
+    (
+      user
+    ) => (
+
+      <div
+       key={
+        user._id
+       }
+
+       onClick={
+        async () => {
+
+       await startConversation(
+ user._id
+);
+
+await fetchChats();
+
+setShowUsers(
+ false
+);
+       }}
+
+       className="
+       p-3
+       rounded-2xl
+       hover:bg-gray-200
+       cursor-pointer
+       flex
+       items-center
+       gap-3
+       transition
+      "
+      >
+
+       <div
+        className="
+        w-10
+        h-10
+        rounded-full
+        bg-gray-300
+        flex
+        items-center
+        justify-center
+        font-bold
+       "
+       >
+        {
+         user.name[0]
+        }
+       </div>
+
+       <div>
+
+        <h3
+         className="
+         font-medium
+        "
+        >
+         {
+          user.name
+         }
+        </h3>
+
+        <p
+         className="
+         text-sm
+         text-gray-500
+        "
+        >
+         {
+          user.email
+         }
+        </p>
+
+       </div>
+
+      </div>
+    )
+
+    
+   )
+   
+   }
+   {
+ users.filter(
+  (user) =>
+
+  !chats.some(
+   (chat) =>
+
+   chat.user._id
+   ===
+   user._id
+  )
+ ).length === 0 && (
+
+  <p
+   className="
+   text-sm
+   text-gray-500
+   text-center
+   py-4
+  "
+  >
+   No new users
+  </p>
+ )
+}
+
+  </div>
+ )
+}
+
+<h2
  className="
  text-sm
  font-semibold
  text-gray-500
+ px-4
  mb-2
- px-2
 "
 >
-Start New Chat
+ Recent Chats
 </h2>
 
-<div
- className="
- mb-4
- space-y-2
-"
->
-
-{users.map(
- (user) => (
-
-  <div
-
-   key={user._id}
-
-   onClick={() =>
-   startConversation(
-    user._id
-   )}
-
-   className="
-   p-3
-   rounded-xl
-   hover:bg-gray-200
-   cursor-pointer
-   flex
-   items-center
-   gap-3
-  "
-  >
-
-   <div
-    className="
-    w-10
-    h-10
-    rounded-full
-    bg-gray-300
-    flex
-    items-center
-    justify-center
-    font-bold
-   "
-   >
-    {user.name[0]}
-   </div>
-
-   <span>
-    {user.name}
-   </span>
-
-  </div>
- )
-)}
-
-</div>
 
           {/* Chat List */}
 
@@ -486,7 +624,17 @@ Start New Chat
                       </div>
                     );
                   }
+
+                  
                 )}
+
+                <div
+ ref={
+  messagesEndRef
+ }
+/>
+
+
 
               </div>
 

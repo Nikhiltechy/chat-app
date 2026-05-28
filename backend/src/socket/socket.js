@@ -45,6 +45,12 @@ export const initSocket =
             userId,
             socket.id
           );
+          io.emit(
+  "onlineUsers",
+  Array.from(
+    onlineUsers.keys()
+  )
+);
 
           console.log(
             "Online users:",
@@ -75,6 +81,13 @@ export const initSocket =
               .delete(
                 userId
               );
+
+              io.emit(
+  "onlineUsers",
+  Array.from(
+    onlineUsers.keys()
+  )
+);
 
               break;
             }

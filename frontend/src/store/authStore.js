@@ -53,8 +53,6 @@ create(
         isAuthenticated:
           true,
 
-        loading:
-          false,
       });
 
       useSocketStore
@@ -65,6 +63,15 @@ create(
   .user
   ._id
 );
+
+setTimeout(() => {
+
+  set({
+    loading:
+      false
+  });
+
+}, 50);
 
       return {
         success:
@@ -123,8 +130,7 @@ create(
         isAuthenticated:
           true,
 
-        loading:
-          false,
+       
       });
 
       useSocketStore
@@ -135,7 +141,14 @@ create(
   .user
   ._id
 );
+  setTimeout(() => {
 
+  set({
+    loading:
+      false
+  });
+
+}, 50);
       return {
         success:
           true

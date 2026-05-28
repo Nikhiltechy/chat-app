@@ -134,16 +134,29 @@ const receiverId =
 
 const receiverSocketId =
  getReceiverSocketId(
-  receiverId
+  receiverId.toString()
  );
+
+console.log(
+ "Receiver ID:",
+ receiverId
+);
+
+console.log(
+ "Receiver Socket:",
+ receiverSocketId
+);
 
 if (
  receiverSocketId
 ) {
 
- getIO().to(
-   receiverSocketId
- )
+ console.log(
+  "EMITTING MESSAGE"
+ );
+
+ getIO()
+ .to(receiverSocketId)
  .emit(
    "newMessage",
    populatedMessage

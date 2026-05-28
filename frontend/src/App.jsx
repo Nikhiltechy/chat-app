@@ -21,6 +21,9 @@ from "./pages/OAuthSuccessPage";
 import ProtectedRoute
 from "./routes/ProtectedRoute";
 
+import LandingPage
+from "./pages/LandingPage";
+
 import {
  useEffect
 }
@@ -51,7 +54,19 @@ const loading =
 
 useEffect(() => {
 
-  checkAuth();
+  const currentPath =
+    window.location.pathname;
+
+  if (
+    currentPath !==
+      "/login"
+    &&
+    currentPath !==
+      "/signup"
+  ) {
+
+    checkAuth();
+  }
 
 }, []);
 
@@ -67,6 +82,13 @@ if (loading) {
     <BrowserRouter>
 
       <Routes>
+
+        <Route
+ path="/"
+ element={
+   <LandingPage />
+ }
+/>
 
         <Route
           path="/login"

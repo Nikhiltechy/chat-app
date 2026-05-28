@@ -60,6 +60,22 @@ MessageInput() {
           )
         }
 
+        onKeyDown={
+ async (e) => {
+
+  if (
+   e.key ===
+   "Enter"
+  ) {
+
+   e.preventDefault();
+
+   await
+   handleSend();
+  }
+ }
+}
+
         className="
         flex-1
         border

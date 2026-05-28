@@ -12,29 +12,67 @@ useSocketStore =
 create(
 (set) => ({
 
-  socket:
-    null,
+  socket: null,
 
   onlineUsers:
     [],
 
 
-  connectSocket:
-  (
+connectSocket:
+(
+ userId
+) => {
+
+ if (
+  !socket.connected
+ ) {
+
+  socket.connect();
+ }
+
+ socket.off(
+  "connect"
+ );
+
+ socket.on(
+  "connect",
+
+  () => {
+
+   console.log(
+    "JOINING:",
     userId
+   );
+
+   socket.emit(
+    "join",
+    userId
+   );
+  }
+ );
+
+ socket.off(
+  "onlineUsers"
+ );
+
+ socket.on(
+  "onlineUsers",
+
+  (
+   users
   ) => {
 
-    socket.connect();
+   set({
+    onlineUsers:
+      users,
+   });
+  }
+ );
 
-    socket.emit(
-      "join",
-      userId
-    );
-
-    set({
-      socket,
-    });
-  },
+ set({
+  socket,
+ });
+},
 
 
   disconnectSocket:
@@ -43,8 +81,12 @@ create(
     socket.disconnect();
 
     set({
+
       socket:
         null,
+
+      onlineUsers:
+        [],
     });
   },
 
